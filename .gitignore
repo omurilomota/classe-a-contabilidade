@@ -1,0 +1,28 @@
+# Dependências
+node_modules/
+
+# Build
+dist/
+coverage/
+*.tsbuildinfo
+
+# Ambiente
+.env
+.env.local
+.env.*.local
+
+# Vercel
+.vercel/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / sistema
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Ferramentas locais de agente
+.kilo/

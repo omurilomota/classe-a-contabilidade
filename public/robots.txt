@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://classe-a-contabilidade.vercel.app/sitemap.xml

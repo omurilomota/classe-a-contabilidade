@@ -1,0 +1,223 @@
+@import "tailwindcss";
+
+/* Fontes variáveis self-hosted (somente subset latin, sem dependência externa). */
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("/fonts/inter-latin-variable.woff2") format("woff2-variations");
+}
+
+@font-face {
+  font-family: "Fraunces Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("/fonts/fraunces-latin-variable.woff2") format("woff2-variations");
+}
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Fraunces Variable", "Iowan Old Style", Georgia, "Times New Roman", serif;
+
+  --color-navy-950: #071a2b;
+  --color-navy-900: #0f2a43;
+  --color-navy-800: #163a59;
+  --color-navy-700: #1f4a6e;
+  --color-navy-600: #2b5f88;
+  --color-navy-100: #dbe6ef;
+  --color-navy-50: #eef4f8;
+
+  --color-gold-600: #856410;
+  --color-gold-500: #c9a227;
+  --color-gold-400: #d9b84a;
+  --color-gold-300: #e6cd7c;
+  --color-gold-200: #f0e2b4;
+  --color-gold-100: #f8f1da;
+  --color-gold-50: #fcf9f0;
+
+  --color-cream-50: #fbf9f4;
+  --color-cream-100: #f5f1e8;
+  --color-cream-200: #ece5d7;
+  --color-cream-300: #ded4c1;
+
+  --color-ink: #14202b;
+  --color-muted: #55646f;
+  --color-line: #e4ded2;
+
+  --shadow-soft: 0 1px 2px rgb(15 42 67 / 0.04), 0 12px 32px -12px rgb(15 42 67 / 0.16);
+  --shadow-lift: 0 2px 4px rgb(15 42 67 / 0.05), 0 24px 48px -20px rgb(15 42 67 / 0.28);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-cream-50 font-sans text-ink antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif text-navy-900;
+    font-variation-settings: "SOFT" 0, "WONK" 0;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-gold-500);
+    color: var(--color-navy-900);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-gold-500);
+    outline-offset: 3px;
+    border-radius: 4px;
+    box-shadow: 0 0 0 5px rgb(15 42 67 / 0.85);
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
+  }
+
+  .shell-narrow {
+    @apply mx-auto w-full max-w-5xl px-5 sm:px-8 lg:px-10;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[0.7rem] font-semibold tracking-[0.18em] uppercase;
+  }
+
+  .card-surface {
+    @apply rounded-2xl border border-line bg-white shadow-soft;
+  }
+
+  .link-underline {
+    @apply underline decoration-gold-500 decoration-2 underline-offset-4 transition-colors hover:text-navy-700;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-sm font-semibold text-navy-900;
+  }
+
+  .field-input {
+    @apply w-full rounded-xl border border-cream-300 bg-white px-4 py-3 text-base text-ink shadow-[0_1px_0_rgb(15_42_67_/_0.02)] transition placeholder:text-muted focus:border-navy-700 focus:ring-2 focus:ring-gold-500/40 focus:outline-none;
+  }
+
+  .prose-lgpd {
+    @apply text-[0.975rem] leading-7 text-muted;
+  }
+
+  .prose-lgpd h2 {
+    @apply mt-10 mb-3 font-serif text-2xl text-navy-900;
+  }
+
+  .prose-lgpd h3 {
+    @apply mt-6 mb-2 text-lg font-semibold text-navy-900;
+  }
+
+  .prose-lgpd p {
+    @apply mb-4;
+  }
+
+  .prose-lgpd ul {
+    @apply mb-4 list-disc space-y-1.5 pl-5;
+  }
+
+  .prose-lgpd a {
+    @apply font-medium text-navy-800 underline decoration-gold-500 decoration-2 underline-offset-4;
+  }
+
+  .prose-lgpd strong {
+    @apply font-semibold text-navy-900;
+  }
+}
+
+@layer utilities {
+  .bg-grid-soft {
+    background-image:
+      linear-gradient(to right, rgb(15 42 67 / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(15 42 67 / 0.045) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  .bg-dots-gold {
+    background-image: radial-gradient(rgb(201 162 39 / 0.22) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+
+  .text-shadow-none {
+    text-shadow: none;
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out both;
+  }
+
+  .delay-1 {
+    animation-delay: 80ms;
+  }
+  .delay-2 {
+    animation-delay: 160ms;
+  }
+  .delay-3 {
+    animation-delay: 240ms;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
