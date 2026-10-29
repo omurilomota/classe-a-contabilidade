@@ -1,31 +1,19 @@
-import { useSyncExternalStore, type AnchorHTMLAttributes, type ReactNode } from "react";
+import { useSyncExternalStore, type AnchorHTMLAttributes, type MouseEvent, type ReactNode } from "react";
 
 function normalizePath(pathname: string): string {
   if (!pathname || pathname === "/" || pathname.endsWith("/index.html")) return "/";
   return pathname.replace(/\/+$/, "");
 }
 
-const KNOWN_ROUTES = new Set([
-  "/",
-  "/abrir-empresa",
-  "/simulador",
-  "/prazos-fiscais",
-  "/institucional",
-  "/politica-de-privacidade",
-  "/unidades/junqueiropolis",
-  "/unidades/dracena",
-]);
-
 function readRoute(): string {
   if (typeof window === "undefined") return "/";
-  const hash = window.location.hash;
-  if (hash.startsWith("#/")) return normalizePath(hash.slice(1));
-  const pathname = normalizePath(window.location.pathname);
-  return KNOWN_ROUTES.has(pathname) ? pathname : "/";
+  return normalizePath(window.location.pathname);
 }
 
 /**
- * Rota atual. Âncoras internas (ex.: #conteudo) não alteram a rota.
+ * Rota atual baseada na URL real (History API), sem hash.
+ * A Vercel reescreve rotas desconhecidas para index.html; o App decide
+ * entre a página correspondente e a página 404.
  */
 let currentRoute = readRoute();
 
@@ -34,15 +22,7 @@ export function getCurrentPath(): string {
 }
 
 function syncRoute(): void {
-  const hash = window.location.hash;
-  if (hash.startsWith("#/")) {
-    currentRoute = normalizePath(hash.slice(1));
-    return;
-  }
-  if (!hash) {
-    const pathname = normalizePath(window.location.pathname);
-    currentRoute = KNOWN_ROUTES.has(pathname) ? pathname : "/";
-  }
+  currentRoute = readRoute();
 }
 
 function subscribe(callback: () => void): () => void {
@@ -50,11 +30,11 @@ function subscribe(callback: () => void): () => void {
     syncRoute();
     callback();
   };
-  window.addEventListener("hashchange", handler);
   window.addEventListener("popstate", handler);
+  window.addEventListener("routechange", handler);
   return () => {
-    window.removeEventListener("hashchange", handler);
     window.removeEventListener("popstate", handler);
+    window.removeEventListener("routechange", handler);
   };
 }
 
@@ -64,12 +44,13 @@ export function useRoute(): string {
 
 export function navigate(to: string): void {
   if (typeof window === "undefined") return;
-  const target = to.startsWith("/") ? to : `/${to}`;
+  const target = normalizePath(to.startsWith("/") ? to : `/${to}`);
   if (getCurrentPath() === target) {
     window.scrollTo({ top: 0, behavior: "smooth" });
     return;
   }
-  window.location.hash = target;
+  window.history.pushState({}, "", target);
+  window.dispatchEvent(new Event("routechange"));
 }
 
 type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
@@ -78,17 +59,16 @@ type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
 };
 
 export function Link({ to, children, onClick, ...rest }: LinkProps) {
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    onClick?.(event);
+    if (event.defaultPrevented) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    navigate(to);
+  };
+
   return (
-    <a
-      href={`#${to}`}
-      onClick={(event) => {
-        onClick?.(event);
-        if (getCurrentPath() === to) {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-      }}
-      {...rest}
-    >
+    <a href={to} onClick={handleClick} {...rest}>
       {children}
     </a>
   );
