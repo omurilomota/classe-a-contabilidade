@@ -28,3 +28,9 @@ Thumbs.db
 .kilo/
 .vercel
 .env*
+
+# Conteúdo interno e artefatos locais (não publicar)
+ROTEIRO-APRESENTACAO.md
+_ops/
+.kilo/
+dist/
