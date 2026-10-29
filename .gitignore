@@ -26,3 +26,5 @@ Thumbs.db
 
 # Ferramentas locais de agente
 .kilo/
+.vercel
+.env*
