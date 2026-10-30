@@ -413,6 +413,17 @@ function Footer() {
             <span>Feito para a Alta Paulista.</span>
           </div>
         </div>
+        <p className="mt-3 text-[0.68rem] text-cream-100/30">
+          <a
+            href="https://wa.me/5518998133524"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Falar com Murilo Mota no WhatsApp"
+            className="transition-colors hover:text-gold-400"
+          >
+            Desenvolvido por Murilo Mota · 55 (18) 99813-3524
+          </a>
+        </p>
       </div>
     </footer>
   );
